@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>TASK BOARD</h1>
+
+<input type="text" id="lnputName" name="AddTask"><br><br>
+<button id="InsBtn">INSERT</button>
+<button id="deleteBtn">DELETE</button>
+<button id="loadAllData">LOAD ALL DATA</button>
+
+<ul id ="shopping-list">
+</ul>
+
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyB1uRXOdzswXY8knaBbxWHFyZMJ_OWCjpQ",
+      authDomain: "mobileapptask-9bb8f.firebaseapp.com",
+      databaseURL: "https://mobileapptask-9bb8f-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "mobileapptask-9bb8f",
+      storageBucket: "mobileapptask-9bb8f.appspot.com",
+      messagingSenderId: "1018912115621",
+      appId: "1:1018912115621:web:aff5ed024fbad98c30364c"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+
+    import {getDatabase,ref,set,get,child,update,remove} from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+
+    const db = getDatabase();
+
+
+var count = 0;
+    var inputFiledRef = document.getElementById("lnputName")
+    var InsBtnRef = document.getElementById("InsBtn")
+var deleteBtnRef = document.getElementById("deleteBtn")
+var loadALLBtnRef = document.getElementById("loadAllData")
+var shoppingListRef = document.getElementById("shopping-list")
+
+
+
+    function InsertData()
+    {
+        var total = count + 1;
+        count = total;
+        set(ref(db,"movies/" + count),{
+            NameOfStd:inputFiledRef.value
+        }).then(()=>{
+            //alert("Data stored successfuly");
+
+            GetAllDataOnce();
+
+
+        }).catch((error)=>{
+            alert(" unsuccessfuly error" +  error);
+        });
+    }
+
+InsBtnRef.addEventListener('click',InsertData);
+
+
+
+function DeleteData()
+    {
+        remove(ref(db,"movies/" + count),{
+        }).then(()=>{
+            //alert("Data removed successfuly");
+
+            GetAllDataOnce();
+
+
+        }).catch((error)=>{
+            alert(" unsuccessfuly error" +  error);
+        });
+    }
+
+    deleteBtnRef.addEventListener('click',DeleteData);
+
+
+
+    loadALLBtnRef.addEventListener('click',GetAllDataOnce);
+
+
+    function GetAllDataOnce()
+    {
+const dbRef = ref(db);
+get(child(dbRef,"movies"))
+.then((snapshort)=>{
+           var student = [];
+           snapshort.forEach(childSnapshort => {
+            student.push(childSnapshort.val());
+           });
+
+        AddAllItemsToTable(student);
+
+        })
+    }
+
+    window.onload = GetAllDataOnce;
+
+function AddAllItemsToTable(TheStudnet)
+{
+    count = TheStudnet.length;
+    inputFiledRef.value = ""
+    shoppingListRef.innerHTML = "";
+    for(let i = 0; i < TheStudnet.length ; i++)
+    {
+       shoppingListRef.innerHTML += `<li>${TheStudnet[i].NameOfStd}</li>`
+    }
+TheStudnet.forEach(element =>{
+  
+});
+}
+  </script>
+
+
+</body>
+</html>
